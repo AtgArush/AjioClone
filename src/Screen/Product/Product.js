@@ -12,16 +12,18 @@ import images from '../../constant/images';
 import Carousel from 'react-native-snap-carousel'; // Version can be specified in package.json
 import {scrollInterpolator, animatedStyles} from '../../../utils/animations';
 import navigationStrings from '../../constant/navigationStrings';
+import RBSheet from 'react-native-raw-bottom-sheet';
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 const ITEM_HEIGHT = Math.round((ITEM_WIDTH * 3) / 4);
-
 
 export default class Product extends Component {
   constructor(props) {
     super(props);
     this.state = {
       index: 0,
+      size: [6,7,8,9,10],
+      selectedSize: 0
     };
   }
 
@@ -34,9 +36,27 @@ export default class Product extends Component {
     );
   }
 
+  selectItemReturn = () =>{
+    // alert()
+    let item = this.props.route.params.product
+    let {navigation} = this.props;
+
+    let {selectedSize} = this.state
+    item["selectedSize"] = selectedSize
+    navigation.navigate(navigationStrings.HOMESCREEN, {item: item})
+    console.log(item)
+  }
+  
+
+  setSize = (size) => {
+    this.setState({selectedSize: size}, ()=>{
+      console.log(this.state)
+    })
+  }
+
   render() {
-    console.log(this.props.route.params)
-    let {navigation} = this.props
+    console.log(this.props.route.params);
+    let {navigation} = this.props;
     let {
       name,
       descriptionShort,
@@ -46,38 +66,27 @@ export default class Product extends Component {
       frontImage,
       imageArray,
     } = this.props.route.params.product;
-    let {product} = this.props.route.params
-    console.log(navigation)
+    let {product} = this.props.route.params;
+    console.log(navigation);
+    let {size, selectedSize} = this.state
     return (
       <View style={{backgroundColor: 'white'}}>
-        <View
-          style={styles.topBar}>
+        <View style={styles.topBar}>
           <View>
-            <TouchableOpacity
-              style={styles.topBarRightImage}
-              >
+            <TouchableOpacity style={styles.topBarRightImage}>
               <Image
-                style={[{resizeMode: "contain"}, styles.topBarRightImage]}
+                style={[{resizeMode: 'contain'}, styles.topBarRightImage]}
                 source={images.HAMBURGERICON}
               />
             </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row'}}>
-            <Image
-              style={styles.topBarRightImage}
-              source={images.SEARCH}
-            />
-            <Image
-              style={styles.topBarRightImage}
-              source={images.HEART}
-            />
-            <Image
-              style={styles.topBarRightImage}
-              source={images.CART}
-            />
+            <Image style={styles.topBarRightImage} source={images.SEARCH} />
+            <Image style={styles.topBarRightImage} source={images.HEART} />
+            <Image style={styles.topBarRightImage} source={images.CART} />
           </View>
         </View>
-        <ScrollView >
+        <ScrollView>
           <View>
             <Carousel
               style={{height: 440}}
@@ -95,143 +104,130 @@ export default class Product extends Component {
             />
           </View>
 
-          <View
-            style={styles.productDetails}>
+          <View style={styles.productDetails}>
             <View>
-              <Text style={styles.productDetails}>
-                {name}
-              </Text>
-              <Text style={styles.productDescription}>
-                {descriptionShort}
-              </Text>
+              <Text style={styles.productDetails}>{name}</Text>
+              <Text style={styles.productDescription}>{descriptionShort}</Text>
             </View>
             <View>
-            <Text
-                style={styles.productName}>
-                6 colors
-              </Text>
+              <Text style={styles.productName}>6 colors</Text>
             </View>
           </View>
-          <View
-            style={styles.priceSection}>
-            <Text
-              style={styles.price}>
-              Rs. {priceDiscounted}
-            </Text>
-            <Text
-              style={styles.priceOriginal}>
-              Rs. {priceOriginal}
-            </Text>
-            <Text style={styles.discount}>
-              {discount}% OFF
-            </Text>
+          <View style={styles.priceSection}>
+            <Text style={styles.price}>Rs. {priceDiscounted}</Text>
+            <Text style={styles.priceOriginal}>Rs. {priceOriginal}</Text>
+            <Text style={styles.discount}>{discount}% OFF</Text>
           </View>
-          <Text style={styles.priceBottom}>
-            Price inclusive of all taxes
-          </Text>
+          <Text style={styles.priceBottom}>Price inclusive of all taxes</Text>
           <View style={styles.emptyView}></View>
           <View style={{marginVertical: 15}}>
-            <Text
-              style={styles.sectionHead}>
-              Color
-            </Text>
-            <View
-              style={styles.colorBox}>
-              <View
-                style={styles.colorContainer}>
+            <Text style={styles.sectionHead}>Color</Text>
+            <View style={styles.colorBox}>
+              <View style={styles.colorContainer}>
                 <Text style={styles.colorText}>Black</Text>
-                <View
-                  style={styles.colorCircle}></View>
+                <View style={styles.colorCircle}></View>
               </View>
-              <View
-                style={styles.colorContainer}>
+              <View style={styles.colorContainer}>
                 <Text
-                  style={[styles.colorText ,{
-                    color: '#bb0000',
-                  }]}>
+                  style={[
+                    styles.colorText,
+                    {
+                      color: '#bb0000',
+                    },
+                  ]}>
                   Red
                 </Text>
                 <View
-                  style={[styles.colorCircle ,{
-                    backgroundColor: '#bb0000',
-                  }]}></View>
+                  style={[
+                    styles.colorCircle,
+                    {
+                      backgroundColor: '#bb0000',
+                    },
+                  ]}></View>
               </View>
-              <View
-                style={styles.colorContainer}>
+              <View style={styles.colorContainer}>
                 <Text
-                  style={[styles.colorText ,{
-                    color: '#ff5f1f',
-                  }]}>
+                  style={[
+                    styles.colorText,
+                    {
+                      color: '#ff5f1f',
+                    },
+                  ]}>
                   Orange
                 </Text>
                 <View
-                  style={[styles.colorCircle ,{
-                    backgroundColor: '#ff5f1f',
-                  }]}></View>
+                  style={[
+                    styles.colorCircle,
+                    {
+                      backgroundColor: '#ff5f1f',
+                    },
+                  ]}></View>
               </View>
-              <View
-                style={styles.colorContainer}>
+              <View style={styles.colorContainer}>
                 <Text
-                  style={[styles.colorText ,{
-                    color: '#010080',
-                  }]}>
+                  style={[
+                    styles.colorText,
+                    {
+                      color: '#010080',
+                    },
+                  ]}>
                   Blue
                 </Text>
                 <View
-                  style={[styles.colorCircle ,{
-                    backgroundColor: '#010080',
-                  }]}></View>
+                  style={[
+                    styles.colorCircle,
+                    {
+                      backgroundColor: '#010080',
+                    },
+                  ]}></View>
               </View>
-              <View
-                style={styles.colorContainer}>
+              <View style={styles.colorContainer}>
                 <Text
-                  style={[styles.colorText ,{
-                    color: '#21130d',
-                  }]}>
+                  style={[
+                    styles.colorText,
+                    {
+                      color: '#21130d',
+                    },
+                  ]}>
                   Brown
                 </Text>
                 <View
-                  style={[styles.colorCircle ,{
-                    backgroundColor: '#21130d',
-                  }]}></View>
+                  style={[
+                    styles.colorCircle,
+                    {
+                      backgroundColor: '#21130d',
+                    },
+                  ]}></View>
               </View>
             </View>
           </View>
           <View style={styles.emptyView}></View>
           <View style={styles.productDetailSection}>
-            <View
-              style={styles.productContainer}>
-              <Text style={styles.productDetailHeading}>
-                Product Details
-              </Text>
-              <Text
-                style={styles.productRight}>
-                + View More
-              </Text>
+            <View style={styles.productContainer}>
+              <Text style={styles.productDetailHeading}>Product Details</Text>
+              <Text style={styles.productRight}>+ View More</Text>
             </View>
             <View style={{marginVertical: 15}}>
               <Text style={styles.productDetailPoints}>
                 Wipe with a clean and dry cloth when needed
               </Text>
-              <Text style={styles.productDetailPoints}>
-                PU upper and sole
-              </Text>
-              <Text style={styles.productDetailPoints}>
-                Velcro fastening
-              </Text>
-              <Text style={styles.productDetailPoints}>
-                1 month warranty
-              </Text>
+              <Text style={styles.productDetailPoints}>PU upper and sole</Text>
+              <Text style={styles.productDetailPoints}>Velcro fastening</Text>
+              <Text style={styles.productDetailPoints}>1 month warranty</Text>
             </View>
           </View>
-          <TouchableOpacity style = {styles.returnButton} onPress = {()=> navigation.navigate(navigationStrings.HOMESCREEN, {item: product})} >
-            <Text style = {styles.returnButtonText}>Add Item</Text>
+          <TouchableOpacity
+            style={styles.returnButton}
+            // onPress={() =>
+            //   navigation.navigate(navigationStrings.HOMESCREEN, {item: product})
+            // }
+            onPress={() => this.RBSheet.open()}
+            >
+            <Text style={styles.returnButtonText}>Add Item</Text>
           </TouchableOpacity>
           <View style={styles.emptyView}></View>
           <View style={styles.productContainer}>
-            <Text style={styles.productDetailHeading}>
-              Returns
-            </Text>
+            <Text style={styles.productDetailHeading}>Returns</Text>
             <Text style={styles.returnPolicy}>
               Easy 30 day return and exchange.Return policy may vary based on
               the products and promotions.Full details available with the
@@ -239,6 +235,63 @@ export default class Product extends Component {
             </Text>
           </View>
         </ScrollView>
+        <RBSheet
+          ref={ref => {
+            this.RBSheet = ref;
+          }}
+          height={200}
+          openDuration={250}
+          customStyles={{
+            container: {
+              justifyContent: "center",
+              // alignItems: "center"
+            }
+          }}
+        >
+          <View style = {{flex: 1, backgroundColor: "#f0f4f7", paddingHorizontal: 25}}>
+            <View style = {{marginTop: 15,flexDirection: "row" ,justifyContent: "space-between"}}>
+              <Text style = {styles.sizeSelector}>Select Size</Text>
+              <Text style = {[styles.sizeSelector, {color: "#29b07d", fontSize: 18}]}>Size chart</Text>
+            </View>
+            <Text style = {{fontSize: 16, fontWeight: "bold", marginVertical: 25}}>{selectedSize}</Text>
+
+            <View style = {{display: 'flex', flexDirection: "row"}}>
+              {size.map((value, key) => {
+                return(
+                  // <TouchableOpacity style = {{marginVertical: 15, paddingHorizontal: 5, backgroundColor: "blue"}} onPress = {()=>{this.setSize(value)}}>
+                  //   <Text>{value}</Text>
+                  // </TouchableOpacity>
+                  <View style = {{width: 30, height: 30, backgroundColor: "#f0f4f7", marginRight: 15}}>
+                  <TouchableOpacity onPress = {()=>{this.setSize(value)}}>
+                    <Text>{value}</Text>
+                  </TouchableOpacity>
+                  </View>
+                )
+              })}
+            </View>
+            {selectedSize ? 
+                        <TouchableOpacity
+                        style={styles.returnButton}
+                        onPress={() =>
+                          {                         this.selectItemReturn()}
+                        }
+                        // onPress={() => this.RBSheet.open()}
+                        >
+                        <Text style={styles.returnButtonText}>Add Item</Text>
+                      </TouchableOpacity>
+                       : 
+                       <TouchableOpacity
+                       style={[styles.returnButton, {backgroundColor: "#777"}]}
+                       onPress={() =>{
+                         this.selectItemReturn()
+                       }
+                       }
+                       onPress={() => this.RBSheet.open()}
+                       >
+                       <Text style={[styles.returnButtonText, {textDecorationLine:"line-through", color: "#111"}]}>Add Item</Text>
+                     </TouchableOpacity>}
+          </View>
+        </RBSheet>
       </View>
     );
   }
@@ -265,7 +318,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  topBar:{
+  topBar: {
     height: 65,
     paddingHorizontal: 20,
     paddingVertical: 15,
@@ -273,17 +326,18 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
   },
-  topBarRightImage:{
-    height: 30, width: 30
+  topBarRightImage: {
+    height: 30,
+    width: 30,
   },
-  topLeftImage:{
+  topLeftImage: {
     resizeMode: 'contain',
     height: 45,
     width: 45,
     marginHorizontal: 5,
     marginVertical: 0,
   },
-  productDetails:{
+  productDetails: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -291,100 +345,123 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   productName: {
-    fontSize: 20, color: '#444', fontWeight: 'bold'
+    fontSize: 20,
+    color: '#444',
+    fontWeight: 'bold',
   },
-  productDescription:{
-    fontSize: 15, color: '#888'
+  productDescription: {
+    fontSize: 15,
+    color: '#888',
   },
-  productRight:{
-    color: '#589fd3', marginLeft: -45, fontWeight: 'bold'
+  productRight: {
+    color: '#589fd3',
+    marginLeft: -45,
+    fontWeight: 'bold',
   },
-  priceSection:{
+  priceSection: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-  price:{
+  price: {
     fontSize: 18,
     marginRight: 15,
     color: 'black',
     fontWeight: 'bold',
   },
-  priceOriginal:{
+  priceOriginal: {
     fontSize: 14,
     marginRight: 15,
     textDecorationLine: 'line-through',
     color: '#555',
   },
-  discount:{
-    fontSize: 16, marginRight: 15, color: '#1db078'
+  discount: {
+    fontSize: 16,
+    marginRight: 15,
+    color: '#1db078',
   },
-  priceBottom:{
-    fontSize: 11, marginBottom: 15, paddingHorizontal: 20
+  priceBottom: {
+    fontSize: 11,
+    marginBottom: 15,
+    paddingHorizontal: 20,
   },
-  emptyView:{
-    height: 10, backgroundColor: '#f0f4f7'
+  emptyView: {
+    height: 10,
+    backgroundColor: '#f0f4f7',
   },
-  sectionHead:{
+  sectionHead: {
     color: '#555',
     fontWeight: 'bold',
     fontSize: 22,
     marginBottom: 10,
     paddingHorizontal: 20,
   },
-  colorBox:{
+  colorBox: {
     display: 'flex',
     flexDirection: 'row',
     paddingHorizontal: 40,
   },
-  colorContainer:{
+  colorContainer: {
     marginRight: 15,
     display: 'flex',
     alignItems: 'center',
   },
-  colorText:{
-    fontWeight: 'bold', marginBottom: 5
+  colorText: {
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
-  colorCircle:{
+  colorCircle: {
     width: 40,
     height: 40,
     borderRadius: 25,
     backgroundColor: 'black',
   },
-  productDetailSection:{
-    paddingHorizontal: 20, paddingVertical: 25
+  productDetailSection: {
+    paddingHorizontal: 20,
+    paddingVertical: 25,
   },
-  productContainer:{
+  productContainer: {
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
   },
-  productDetailHeading:{
-    fontWeight: 'bold', fontSize: 22, color: '#555'
+  productDetailHeading: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    color: '#555',
   },
-  productRight:{
-    fontWeight: 'bold', fontSize: 15, color: '#589fd3'
+  productRight: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: '#589fd3',
   },
-  productDetailPoints:{
-    marginBottom: 5, marginLeft: 5
+  productDetailPoints: {
+    marginBottom: 5,
+    marginLeft: 5,
   },
-  returnPolicy:{
-    marginVertical: 15, marginLeft: 5, color: '#555'
+  returnPolicy: {
+    marginVertical: 15,
+    marginLeft: 5,
+    color: '#555',
   },
   returnButton: {
-    width: "50%",
-    marginLeft: "25%",
-    backgroundColor: "black",
+    width: '50%',
+    marginLeft: '25%',
+    backgroundColor: 'black',
     paddingVertical: 15,
     borderRadius: 10,
-    marginBottom: 10
+    marginBottom: 10,
   },
-  returnButtonText:{
-    color:"white",
-    alignSelf: "center",
-    fontWeight:"bold",
-    fontSize: 16
+  returnButtonText: {
+    color: 'white',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  sizeSelector: {
+    fontSize: 20,
+    fontWeight: "bold"
   }
 });

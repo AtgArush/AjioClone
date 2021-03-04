@@ -26,6 +26,7 @@ export default class Home extends Component {
           priceDiscounted: 1739,
           priceOriginal: 2999,
           discount: 42,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/h77/h97/15706429030430/superdry_blue_lineman_pool_sliders_with_embossed_branding.jpg',
           imageArray: [
@@ -41,6 +42,7 @@ export default class Home extends Component {
           priceDiscounted: 2729,
           priceOriginal: 3499,
           discount: 22,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/20200905/95Ad/5f528b287cdb8c7662941ad8/asics_black_gel_contend_4b+_running_shoes.jpg',
           imageArray: [
@@ -56,6 +58,7 @@ export default class Home extends Component {
           priceDiscounted: 3846,
           priceOriginal: 4995,
           discount: 23,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/h48/h86/15329791475742/nike_white_court_vision_low-top_lace-up_shoes.jpg',
           imageArray: [
@@ -71,6 +74,7 @@ export default class Home extends Component {
           priceDiscounted: 1750,
           priceOriginal: 3499,
           discount: 50,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/h83/hb7/16209307861022/puma_navy_blue_dryflex_idp_low-top_lace-up_casual_shoes.jpg',
           imageArray: [
@@ -86,6 +90,7 @@ export default class Home extends Component {
           priceDiscounted: 1200,
           priceOriginal: 3599,
           discount: 66,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/20210126/vUiU/600f9d3ef997dd5c40e040a5/denill_grey_slip-on_mules_with_bow_applique_.jpg',
           imageArray: [
@@ -101,6 +106,7 @@ export default class Home extends Component {
           priceDiscounted: 1800,
           priceOriginal: 3999,
           discount: 55,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/h33/h7b/16541975576606/adidas_blue_vs_pace_low-top_lace-up_casual_shoes.jpg',
           imageArray: [
@@ -116,6 +122,7 @@ export default class Home extends Component {
           priceDiscounted: 600,
           priceOriginal: 1499,
           discount: 60,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/20200725/tqIW/5f1b2dd1aeb269f5fee603d6/red_tape_black_flip-flops_with_contrast_panels.jpg',
           imageArray: [
@@ -131,6 +138,7 @@ export default class Home extends Component {
           priceDiscounted: 1739,
           priceOriginal: 2999,
           discount: 42,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/hf0/h7e/11201109032990/skechers_black_go_walk_lace-up_sports_shoes.jpg',
           imageArray: [
@@ -146,6 +154,7 @@ export default class Home extends Component {
           priceDiscounted: 680,
           priceOriginal: 1699,
           discount: 60,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/20201120/ufhm/5fb7df41f997dd8c83a39699/sneak-a-peek_green_slingback_chunky_heeled_sandals.jpg',
           imageArray: [
@@ -161,6 +170,7 @@ export default class Home extends Component {
           priceDiscounted: 750,
           priceOriginal: 1499,
           discount: 50,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/h58/ha6/15649567997982/united_colors_of_benetton_blue_slides_with_signature_branding.jpg',
           imageArray: [
@@ -175,6 +185,7 @@ export default class Home extends Component {
           priceDiscounted: 2636,
           priceOriginal: 3295,
           discount: 20,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/20201006/DpaV/5f7b6c7ef997dd8c83582667/crocs_navy_blue_crocband_clogs_with_branding.jpg',
           imageArray: [
@@ -189,6 +200,7 @@ export default class Home extends Component {
           priceDiscounted: 2177,
           priceOriginal: 3299,
           discount: 34,
+          quantity: 1,
           frontImage:
             'https://assets.ajio.com/medias/sys_master/root/h58/h72/14936523309086/lee_cooper_olive_green_panelled_leather_mid-top_lace-up_shoes.jpg',
           imageArray: [
@@ -223,8 +235,8 @@ export default class Home extends Component {
             alignItems: 'center',
             marginLeft: 37,
             marginBottom: 15,
-            borderColor: "black",
-            borderWidth: 1
+            borderColor: 'black',
+            borderWidth: 1,
           }}>
           <Text style={{color: 'black'}}>Add to cart</Text>
         </TouchableOpacity>
@@ -233,23 +245,28 @@ export default class Home extends Component {
   };
 
   addItem = (item) => {
-    // console.log(item)
+    console.log(item);
     let addedItems = this.state.addedItem;
     let addedItemArray = this.state.addedItemArray;
-    alert()
+
+    alert();
     let itemAdded = false;
-    let index = -1
+    let index = -1;
     // let index = addedItemArray.findIndex((value)=>{value.id == item.id})
-    for (let i = 0; i<addedItemArray.length; i++){
-      console.log(addedItemArray[i].id,addedItemArray[i].id ==  item.id,item.id )
-      if(addedItemArray[i].id == item.id){
-        console.log("added duplicate index", i)
-        index = i
+    for (let i = 0; i < addedItemArray.length; i++) {
+      // console.log(
+      //   addedItemArray[i].id,
+      //   addedItemArray[i].id == item.id,
+      //   item.id,
+      // );
+      if (addedItemArray[i].id == item.id) {
+        // console.log('added duplicate index', i);
+        index = i;
       }
     }
     if (index == -1) {
-      addedItemArray = [...this.state.addedItemArray, item]
-      console.log(index)
+      addedItemArray = [...this.state.addedItemArray, item];
+      // console.log(index);
       addedItems = addedItems + 1;
       this.setState(
         {addedItem: addedItems, addedItemArray: addedItemArray},
@@ -259,7 +276,7 @@ export default class Home extends Component {
       );
     } else {
       alert('Item Already added');
-      index = -1
+      index = -1;
     }
   };
 
@@ -269,7 +286,7 @@ export default class Home extends Component {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       // console.log(this.props.route.params);
       if (this.props.route.params) {
-        console.log(this.props.route.params.item, "params")
+        // console.log(this.props.route.params.item, 'params');
         let addedElement = this.props.route.params.item;
         this.addItem(addedElement);
         // console.log(this.props.route.params.item);
@@ -295,9 +312,7 @@ export default class Home extends Component {
         <View style={styles.navbarHolder}>
           {addedItem != 0 && (
             <View style={styles.addedItemIndicator}>
-              <Text style={styles.addedItemIndicatorText}>
-                {addedItem}
-              </Text>
+              <Text style={styles.addedItemIndicatorText}>{addedItem}</Text>
             </View>
           )}
           <View>
@@ -313,14 +328,8 @@ export default class Home extends Component {
             </TouchableOpacity>
           </View>
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Image
-              style={styles.navbarRightIcon}
-              source={images.SEARCH}
-            />
-            <Image
-              style={styles.navbarRightIcon}
-              source={images.HEART}
-            />
+            <Image style={styles.navbarRightIcon} source={images.SEARCH} />
+            <Image style={styles.navbarRightIcon} source={images.HEART} />
             <TouchableOpacity
               style={styles.navbarRightIcon}
               onPress={() =>
@@ -328,30 +337,20 @@ export default class Home extends Component {
                   itemList: this.state.addedItemArray,
                 })
               }>
-              <Image
-                style={styles.navbarRightIcon}
-                source={images.CART}
-              />
+              <Image style={styles.navbarRightIcon} source={images.CART} />
             </TouchableOpacity>
           </View>
         </View>
         <View>
-          <Text
-            style={styles.navbarTextOne}>
-            {' '}
-            Footwear{' '}
-          </Text>
-          <Text
-            style={styles.navbarTextTwo}>
-            49033 Products
-          </Text>
+          <Text style={styles.navbarTextOne}> Footwear </Text>
+          <Text style={styles.navbarTextTwo}>49033 Products</Text>
         </View>
         <FlatList
           data={cartList}
           style={styles.body}
           ItemSeparatorComponent={() => <View style={{height: 10}} />}
           columnWrapperStyle={{justifyContent: 'space-around'}}
-          numColumns={2} 
+          numColumns={2}
           keyExtractor={(value, i) => String(i)}
           renderItem={this._renderItem}
         />

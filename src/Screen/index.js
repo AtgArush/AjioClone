@@ -9,3 +9,4 @@ export {default as Wishlist} from './Wishlist/WishList';
 export {default as ShopOptions} from './ShopOptions/ShopOptions';
 export {default as ProductPage} from './Product/Product';
 export {default as LoginUsername} from './Login/LoginUsername';
+export {default as Checkout} from './CheckOut/CheckOut';

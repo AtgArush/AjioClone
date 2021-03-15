@@ -12,9 +12,8 @@ function Routes() {
         screenOptions={{
           headerShown: false,
         }}>
-        {MainStack()}
         {AuthStack()}
-
+        {MainStack()}
       </Stack.Navigator>
     </NavigationContainer>
   );

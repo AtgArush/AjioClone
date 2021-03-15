@@ -55,9 +55,11 @@ export default function BagCard(props) {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
-                onPress = {()=>{changeQuantity(id, -1)}}
-                >
-                <Text style={{fontSize: 24, fontWeight: 'bold', color: 'black'}}>
+                onPress={() => {
+                  changeQuantity(id, -1);
+                }}>
+                <Text
+                  style={{fontSize: 24, fontWeight: 'bold', color: 'black'}}>
                   -
                 </Text>
               </TouchableOpacity>
@@ -68,7 +70,9 @@ export default function BagCard(props) {
                   width: 40,
                   backgroundColor: '#f0f4f7',
                 }}>
-                <Text style = {{color:"black", fontWeight:"bold"}}>{quantity}</Text>
+                <Text style={{color: 'black', fontWeight: 'bold'}}>
+                  {quantity}
+                </Text>
               </View>
               <TouchableOpacity
                 style={{
@@ -77,16 +81,19 @@ export default function BagCard(props) {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
-                onPress = {()=>{changeQuantity(id, 1)}}
-                >
-                <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
+                onPress={() => {
+                  changeQuantity(id, 1);
+                }}>
+                <Text
+                  style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
                   +
                 </Text>
               </TouchableOpacity>
             </View>
             <View>
               <Text>
-                <Text style={{colr: '#2a2a2a', fontSize: 14, fontWeight: 'bold'}}>
+                <Text
+                  style={{color: '#2a2a2a', fontSize: 14, fontWeight: 'bold'}}>
                   Rs. {priceDiscounted}{' '}
                 </Text>
                 <Text
@@ -98,9 +105,13 @@ export default function BagCard(props) {
                   {' '}
                   Rs. {priceOriginal}{' '}
                 </Text>
-                <Text style={{fontSize: 14, color: '#999'}}> ({discount}%) </Text>
+                <Text style={{fontSize: 14, color: '#999'}}>
+                  {' '}
+                  ({discount}%){' '}
+                </Text>
               </Text>
-              <Text style={{fontSize: 14, color: '#1db078', fontWeight: 'bold'}}>
+              <Text
+                style={{fontSize: 14, color: '#1db078', fontWeight: 'bold'}}>
                 You save Rs. {priceOriginal - priceDiscounted}
               </Text>
             </View>
@@ -112,7 +123,9 @@ export default function BagCard(props) {
             flexDirection: 'row',
             justifyContent: 'flex-end',
           }}>
-          <TouchableOpacity style={{width: '20%', paddingVertical: 15}} onPress = {()=>{removeElementAlert(id)}}>
+          <TouchableOpacity
+            style={{width: '20%', paddingVertical: 15}}
+            >
             <Text style={{fontWeight: 'bold', color: '#3089b1'}}>Remove</Text>
           </TouchableOpacity>
         </View>

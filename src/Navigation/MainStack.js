@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import navigationStrings from '../constant/navigationStrings';
 import TabRoutes from './TabRoutes';
-import {ShopOptions, ProductPage} from '../Screen';
+import {ShopOptions, ProductPage, Checkout} from '../Screen';
 const Stack = createStackNavigator();
 
 export default function MainStack() {
@@ -17,6 +17,7 @@ export default function MainStack() {
         name={navigationStrings.PRODUCTPAGE}
         component={ProductPage}
       />
+      <Stack.Screen name={navigationStrings.CHECKOUT} component={Checkout} />
     </React.Fragment>
   );
 }

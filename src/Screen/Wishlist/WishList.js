@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {View, Text, Image} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import navigationStrings from "../../constant/navigationStrings"
+import images from '../../constant/images';
+import navigationStrings from '../../constant/navigationStrings';
 export default class WishList extends Component {
   render() {
     let {navigation} = this.props
@@ -21,7 +22,7 @@ export default class WishList extends Component {
           }}>
           <Image
             style={{width: 100, height: 100, marginBottom: 10}}
-            source={require('./wishlist.jpg')}
+            source={images.WISHLIST}
           />
         </View>
         <View
@@ -52,8 +53,7 @@ export default class WishList extends Component {
               marginBottom: 15,
               borderRadius: 10,
             }}
-            onPress = {()=> navigation.navigate("HOME")}
-            >
+            onPress={() => navigation.navigate(navigationStrings.HOMESCREEN)}>
             <Text style={{color: 'white', alignSelf: 'center'}}>
               Continue Shopping
             </Text>

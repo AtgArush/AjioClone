@@ -11,4 +11,5 @@ export default {
   WISHLIST: 'wishlist',
   SHOPOPTIONS: 'shopoptions',
   PRODUCTPAGE: 'productpage',
+  CHECKOUT: 'checkout',
 };

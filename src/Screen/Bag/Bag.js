@@ -6,12 +6,12 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  Alert
+  Share
 } from 'react-native';
 import BagCard from '../../Component/bagCard';
 import images from '../../constant/images';
 import navigationStrings from '../../constant/navigationStrings';
-
+import Snackbar from "react-native-snackbar"
 export default class Bag extends Component {
   state = {
     itemList: [],
@@ -20,32 +20,52 @@ export default class Bag extends Component {
     amountPaid: 0,
   };
 
-  // removeElement = (id) => {
-  //   let itemList = [...this.state.itemList]
-  //   let index = itemList.findIndex((item) => item.id == id)
-  //   itemList.splice(index, 1)
-  //   this.setState({itemList: itemList})
+  onShare = async () => {
+    let itemListNew = []
+    let {itemList} = this.state
+    for(a in itemList){
+      let newObject = {}
+      newObject["name"] = itemList[a].name
+      newObject["price"] = itemList[a].priceDiscounted
+      newObject["quantity"] = itemList[a].quantity
+      itemListNew.push(newObject)
+    }
+     
+    let shareString = JSON.stringify(itemListNew)
+    // console.log(itemListNew)   
+    try {
+      const result = await Share.share({
+        message: shareString,
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
-  // }
 
-  // removeElementAlert = (index) => {
-  //   Alert.alert(
-  //     "Delete Product",
-  //     "Remove element from list??",
-  //     [
-  //       {
-  //         text: "No",
-  //         onPress: () => console.log("Cancel Pressed"),
-  //         style: "cancel"
-  //       },
-  //       {
-  //         text: "Yes",
-  //         onPress: () => this.removeElement(index),
-  //       },
-  //     ],
-  //     { cancelable: false }
-  //   );
-  // }
+  //================================================================================================================================
+  //Add Listeners
+
+  componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      if (this.props.route.params) {
+        let items = this.props.route.params.itemList;
+        this.setState({itemList: items}, () => {
+          this.setItems();
+        });
+      } else {
+        console.log('Empty Array');
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
+
+  //================================================================================================================================
+  //Set Price Division Values
+
 
   setItems = () => {
     let itemList = this.state.itemList;
@@ -54,8 +74,8 @@ export default class Bag extends Component {
     let amountPaid = 0;
     itemList.map((item, key) => {
       let savingAmount = item.priceOriginal - item.priceDiscounted;
-      bagTotal = bagTotal + (item.priceDiscounted*item.quantity);
-      savings = savings + savingAmount*item.quantity;
+      bagTotal = bagTotal + item.priceDiscounted * item.quantity;
+      savings = savings + savingAmount * item.quantity;
     });
     amountPaid = bagTotal + 99;
     this.setState({
@@ -67,41 +87,32 @@ export default class Bag extends Component {
     });
   };
 
-  componentDidMount() {
-    this._unsubscribe = this.props.navigation.addListener('focus', () => {
-      if (this.props.route.params) {
-        // console.log(this.props.route.params)
-        let items = this.props.route.params.itemList;
-        this.setState({itemList: items}, () => {
-          // console.log(this.state);
-          this.setItems();
-        });
-      } else {
-        console.log('Empty Array');
-      }
-    });
+  //================================================================================================================================
+  //Change quantity
 
-    // });
-  }
-
-  componentWillUnmount() {
-    this._unsubscribe();
-  }
-
-  changeQuantity = (id, increment) =>  {
-    let itemList = [...this.state.itemList]
-    let index = itemList.findIndex((item) => item.id == id)
-    console.log(itemList[index].quantity)
-    if(itemList[index].quantity == 1 && increment == -1){
+  changeQuantity = (id, increment) => {
+    let itemList = [...this.state.itemList];
+    let index = itemList.findIndex((item) => item.id == id);
+    console.log(itemList[index].quantity);
+    if (itemList[index].quantity == 1 && increment == -1) {
       // this.removeElementAlert(id)
-      alert("Only 1 Quantity left !!")
+      return Snackbar.show({
+        text: "Only 1 Quantity left !!",
+        backgroundColor: "#3089b1",
+        textColor: "#f0f4f7",
+        duration: Snackbar.LENGTH_LONG
+      })
     }
-    itemList[index].quantity = itemList[index].quantity + increment
-    this.setState({itemList: itemList}, ()=>{this.setItems()})
-  }
+    itemList[index].quantity = itemList[index].quantity + increment;
+    this.setState({itemList: itemList}, () => {
+      this.setItems();
+    });
+  };
 
   render() {
     let {itemList, bagTotal, savings, amountPaid, item} = this.state;
+    let {navigation} = this.props
+
     if (itemList.length == 0) {
       return (
         <View style={styles.container}>
@@ -121,7 +132,7 @@ export default class Bag extends Component {
           </View>
           <View style={styles.bodyContainer}>
             <View style={styles.imageContainer}>
-              <Image style={styles.centerImage} source={require('./bag.jpg')} />
+              <Image style={styles.centerImage} source={images.BAG_ICON} />
             </View>
             <View style={styles.emptyPageTextBox}>
               <Text style={styles.emptyPageTextOne}>
@@ -145,7 +156,7 @@ export default class Bag extends Component {
                   marginBottom: 15,
                   borderRadius: 10,
                 }}
-                onPress={() => navigation.navigate('HOME')}>
+                onPress={() => navigation.navigate(navigationStrings.HOMESCREEN)}>
                 <Text style={{color: 'white', alignSelf: 'center'}}>
                   Continue Shopping
                 </Text>
@@ -181,9 +192,13 @@ export default class Bag extends Component {
             <View style={{padding: 25, paddingBottom: 0}}>
               <View>
                 {itemList.map((item, key) => {
-                  return(
-                    <BagCard item={item} changeQuantity={this.changeQuantity} removeElementAlert = {this.removeElementAlert} />
-                  )
+                  return (
+                    <BagCard
+                    key = {key}
+                      item={item}
+                      changeQuantity={this.changeQuantity}
+                    />
+                  );
                 })}
               </View>
             </View>
@@ -222,26 +237,50 @@ export default class Bag extends Component {
               <Text style={addedItemStyles.orderHeading}>Order Details</Text>
               <View style={addedItemStyles.orderDetailRow}>
                 <Text>Bag Total</Text>
-                <Text style = {[addedItemStyles.couponRightText, {color: "black"}]}>Rs. {bagTotal}</Text>
+                <Text
+                  style={[addedItemStyles.couponRightText, {color: 'black'}]}>
+                  Rs. {bagTotal}
+                </Text>
               </View>
               <View style={addedItemStyles.orderDetailRow}>
                 <Text>Bag Savings</Text>
-                <Text style = {[addedItemStyles.couponRightText, {color: "#29b07d"}]}>Rs. {savings}</Text>
+                <Text
+                  style={[addedItemStyles.couponRightText, {color: '#29b07d'}]}>
+                  Rs. {savings}
+                </Text>
               </View>
               <View style={addedItemStyles.orderDetailRow}>
                 <Text>Coupon Savings</Text>
-                <Text style = {addedItemStyles.couponRightText}>Apply coupon</Text>
+                <Text style={addedItemStyles.couponRightText}>
+                  Apply coupon
+                </Text>
               </View>
               <View style={addedItemStyles.orderDetailRow}>
                 <Text>Delivery</Text>
                 <Text>Rs. 99</Text>
               </View>
               <View style={addedItemStyles.orderDetailRow}>
-                <Text style = {addedItemStyles.total}>Total Amount</Text>
-                <Text style = {addedItemStyles.total}>Rs. {amountPaid}</Text>
+                <Text style={addedItemStyles.total}>Total Amount</Text>
+                <Text style={addedItemStyles.total}>Rs. {amountPaid}</Text>
               </View>
               {/* <Text>{savings} {bagTotal}</Text> */}
             </View>
+            <View style = {addedItemStyles.checkOutDiv}>
+                <TouchableOpacity style = {addedItemStyles.shareButton}
+                onPress = {this.onShare}
+                >
+                  <Text style = {addedItemStyles.shareText}>
+                    Share
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style = {addedItemStyles.orderButton}
+                onPress = {()=>navigation.navigate(navigationStrings.CHECKOUT, {orderAmount: amountPaid})}
+                >
+                  <Text style = {addedItemStyles.orderText}>
+                  Check out
+                  </Text>
+                </TouchableOpacity>
+              </View>
           </ScrollView>
         </View>
       );
@@ -391,7 +430,14 @@ const addedItemStyles = StyleSheet.create({
   total: {
     fontWeight: "bold",
     fontSize: 16
-  }
+  },
+  checkOutDiv:{
+    height: 60, backgroundColor: "#f0f4f7", justifyContent: "space-around", flexDirection: "row", alignItems: "center" 
+  },
+  shareButton:{ flex: 0.3 ,height: 40, backgroundColor: "white", justifyContent: "center", alignItems: "center", borderRadius: 10},
+  shareText: {fontWeight: "bold"},
+  orderButton:{ flex: 0.5 ,height: 40, backgroundColor: "black", justifyContent: "center", alignItems: "center", borderRadius: 10},
+  orderText:{color: "white", fontWeight: "bold"}
 });
 
 {

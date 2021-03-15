@@ -22,11 +22,12 @@ export default class Product extends Component {
     super(props);
     this.state = {
       index: 0,
-      size: [6,7,8,9,10],
-      selectedSize: 0
+      size: [6, 7, 8, 9, 10],
+      selectedSize: 0,
     };
   }
-
+//===============================================================================================================================================
+//Render item function for Carousel
   _renderItem({item}) {
     return (
       <Image
@@ -36,23 +37,31 @@ export default class Product extends Component {
     );
   }
 
-  selectItemReturn = () =>{
-    // alert()
-    let item = this.props.route.params.product
+//===============================================================================================================================================
+//Return Selected item to Home Page and append selectedSize 
+
+  selectItemReturn = () => {
+    let item = this.props.route.params.product;
     let {navigation} = this.props;
 
-    let {selectedSize} = this.state
-    item["selectedSize"] = selectedSize
-    navigation.navigate(navigationStrings.HOMESCREEN, {item: item})
-    console.log(item)
-  }
-  
+    let {selectedSize} = this.state;
+    item['selectedSize'] = selectedSize;
+    navigation.navigate(navigationStrings.HOMESCREEN, {item: item});
+    console.log(item);
+  };
+
+//===============================================================================================================================================
+//Set Selected Size element
 
   setSize = (size) => {
-    this.setState({selectedSize: size}, ()=>{
-      console.log(this.state)
-    })
-  }
+    this.setState({selectedSize: size}, () => {
+      console.log(this.state);
+    });
+  };
+
+//===============================================================================================================================================
+// Main render Element
+
 
   render() {
     console.log(this.props.route.params);
@@ -68,7 +77,7 @@ export default class Product extends Component {
     } = this.props.route.params.product;
     let {product} = this.props.route.params;
     console.log(navigation);
-    let {size, selectedSize} = this.state
+    let {size, selectedSize} = this.state;
     return (
       <View style={{backgroundColor: 'white'}}>
         <View style={styles.topBar}>
@@ -218,11 +227,7 @@ export default class Product extends Component {
           </View>
           <TouchableOpacity
             style={styles.returnButton}
-            // onPress={() =>
-            //   navigation.navigate(navigationStrings.HOMESCREEN, {item: product})
-            // }
-            onPress={() => this.RBSheet.open()}
-            >
+            onPress={() => this.RBSheet.open()}>
             <Text style={styles.returnButtonText}>Add Item</Text>
           </TouchableOpacity>
           <View style={styles.emptyView}></View>
@@ -236,60 +241,85 @@ export default class Product extends Component {
           </View>
         </ScrollView>
         <RBSheet
-          ref={ref => {
+          ref={(ref) => {
             this.RBSheet = ref;
           }}
           height={200}
           openDuration={250}
           customStyles={{
             container: {
-              justifyContent: "center",
-              // alignItems: "center"
-            }
-          }}
-        >
-          <View style = {{flex: 1, backgroundColor: "#f0f4f7", paddingHorizontal: 25}}>
-            <View style = {{marginTop: 15,flexDirection: "row" ,justifyContent: "space-between"}}>
-              <Text style = {styles.sizeSelector}>Select Size</Text>
-              <Text style = {[styles.sizeSelector, {color: "#29b07d", fontSize: 18}]}>Size chart</Text>
+              justifyContent: 'center',
+            },
+          }}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: '#f0f4f7',
+              paddingHorizontal: 25,
+            }}>
+            <View
+              style={{
+                marginTop: 15,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={styles.sizeSelector}>Select Size</Text>
+              <Text
+                style={[styles.sizeSelector, {color: '#29b07d', fontSize: 18}]}>
+                Size chart
+              </Text>
             </View>
-            <Text style = {{fontSize: 16, fontWeight: "bold", marginVertical: 25}}>{selectedSize}</Text>
+            <Text
+              style={{fontSize: 16, fontWeight: 'bold', marginVertical: 25}}>
+              {selectedSize}
+            </Text>
 
-            <View style = {{display: 'flex', flexDirection: "row"}}>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
               {size.map((value, key) => {
-                return(
-                  // <TouchableOpacity style = {{marginVertical: 15, paddingHorizontal: 5, backgroundColor: "blue"}} onPress = {()=>{this.setSize(value)}}>
-                  //   <Text>{value}</Text>
-                  // </TouchableOpacity>
-                  <View style = {{width: 30, height: 30, backgroundColor: "#f0f4f7", marginRight: 15}}>
-                  <TouchableOpacity onPress = {()=>{this.setSize(value)}}>
-                    <Text>{value}</Text>
-                  </TouchableOpacity>
+                return (
+                  <View
+                  key = {key}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      backgroundColor: '#f0f4f7',
+                      marginRight: 15,
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.setSize(value);
+                      }}>
+                      <Text>{value}</Text>
+                    </TouchableOpacity>
                   </View>
-                )
+                );
               })}
             </View>
-            {selectedSize ? 
-                        <TouchableOpacity
-                        style={styles.returnButton}
-                        onPress={() =>
-                          {                         this.selectItemReturn()}
-                        }
-                        // onPress={() => this.RBSheet.open()}
-                        >
-                        <Text style={styles.returnButtonText}>Add Item</Text>
-                      </TouchableOpacity>
-                       : 
-                       <TouchableOpacity
-                       style={[styles.returnButton, {backgroundColor: "#777"}]}
-                       onPress={() =>{
-                         this.selectItemReturn()
-                       }
-                       }
-                       onPress={() => this.RBSheet.open()}
-                       >
-                       <Text style={[styles.returnButtonText, {textDecorationLine:"line-through", color: "#111"}]}>Add Item</Text>
-                     </TouchableOpacity>}
+            {selectedSize ? (
+              <TouchableOpacity
+                style={styles.returnButtonSheet}
+                onPress={() => {
+                  this.selectItemReturn();
+                }}
+              >
+                <Text style={styles.returnButtonText}>Add Item</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.returnButtonSheet, {backgroundColor: '#777'}]}
+                onPress={() => {
+                  this.selectItemReturn();
+                }}
+                onPress={() => this.RBSheet.open()}>
+                <Text
+                  style={[
+                    styles.returnButtonText,
+                    {textDecorationLine: 'line-through', color: '#111'},
+                  ]}>
+                  Add Item
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </RBSheet>
       </View>
@@ -380,6 +410,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginRight: 15,
     color: '#1db078',
+    fontWeight: "bold"
   },
   priceBottom: {
     fontSize: 11,
@@ -453,6 +484,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 10,
     marginBottom: 10,
+    marginTop: -25
   },
   returnButtonText: {
     color: 'white',
@@ -460,8 +492,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  returnButtonSheet: {
+    width: '50%',
+    marginLeft: '25%',
+    backgroundColor: 'black',
+    paddingVertical: 15,
+    borderRadius: 10,
+    marginBottom: 10
+  },
   sizeSelector: {
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: 'bold',
+  },
 });

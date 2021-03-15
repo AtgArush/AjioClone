@@ -10,14 +10,19 @@ import {
 import images from '../../constant/images';
 import ItemList from '../../Component/ItemList';
 import navigationStrings from '../../constant/navigationStrings';
-// import {useNavigation} from "@react-navigation/native"
+import RBSheet from 'react-native-raw-bottom-sheet';
+import Snackbar from "react-native-snackbar"
+
 
 export default class Home extends Component {
   constructor() {
     super();
     this.state = {
+      size: [6, 7, 8, 9, 10],
       addedItem: 0,
       addedItemArray: [],
+      selectedSize: 0,
+      selectedElement: {},
       cartList: [
         {
           id: 1,
@@ -213,6 +218,29 @@ export default class Home extends Component {
     };
   }
 
+
+  //=================================================================================================================================
+  //Initiate and Remove Listener
+
+  componentDidMount() {
+    this.pageOpen = this.props.navigation.addListener('focus', () => {
+      if (this.props.route.params) {
+        let addedElement = this.props.route.params.item;
+        this.addItem(addedElement);
+        this.props.route.params = null;
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.pageOpen) {
+      this.pageOpen();
+    }
+  }
+
+  //=================================================================================================================================
+  // Render Item Component for Products
+
   _renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -225,88 +253,90 @@ export default class Home extends Component {
         <ItemList item={item} />
         <TouchableOpacity
           onPress={() => {
-            this.addItem(item);
+            this.openRBSheet(item)
           }}
-          style={{
-            width: '30%',
-            paddingHorizontal: 10,
-            paddingVertical: 2,
-            borderRadius: 14,
-            alignItems: 'center',
-            marginLeft: 37,
-            marginBottom: 15,
-            borderColor: 'black',
-            borderWidth: 1,
-          }}>
+          style={styles.addToCartButton}>
           <Text style={{color: 'black'}}>Add to cart</Text>
         </TouchableOpacity>
       </TouchableOpacity>
     );
   };
 
+
+  openRBSheet = (item) => {
+    let addedItemArray = this.state.addedItemArray;
+    let index = -1;
+    for (let i = 0; i < addedItemArray.length; i++) {
+      console.log(addedItemArray[i].id == item.id, addedItemArray[i], item, "RNB sbjhbva")
+      if (addedItemArray[i].id == item.id) {
+        // alert()
+ index = i;       
+       
+      }
+    }
+    if (index == -1) {
+ this.setState({selectedElement: item});
+            this.setState({selectedElement: item});;
+
+        this.RBSheet.open();
+    } else {
+      return Snackbar.show({
+        text: "Item already in cart",
+        backgroundColor: "#3089b1",
+        textColor: "#f0f4f7",
+        duration: Snackbar.LENGTH_LONG
+      })
+    }
+  }
+
+  //=================================================================================================================================
+  //Add item in Cart Array
+
   addItem = (item) => {
     console.log(item);
     let addedItems = this.state.addedItem;
     let addedItemArray = this.state.addedItemArray;
-
-    alert();
-    let itemAdded = false;
     let index = -1;
-    // let index = addedItemArray.findIndex((value)=>{value.id == item.id})
     for (let i = 0; i < addedItemArray.length; i++) {
-      // console.log(
-      //   addedItemArray[i].id,
-      //   addedItemArray[i].id == item.id,
-      //   item.id,
-      // );
       if (addedItemArray[i].id == item.id) {
-        // console.log('added duplicate index', i);
         index = i;
       }
     }
     if (index == -1) {
       addedItemArray = [...this.state.addedItemArray, item];
-      // console.log(index);
       addedItems = addedItems + 1;
       this.setState(
-        {addedItem: addedItems, addedItemArray: addedItemArray},
-        () => {
-          // console.log(this.state.addedItemArray);
-        },
-      );
+        {addedItem: addedItems, addedItemArray: addedItemArray, selectedSize: 0});
     } else {
       alert('Item Already added');
       index = -1;
     }
   };
 
-  componentDidMount() {
-    // this._unsubscribe = this.props.navigation.addListener('focus', () => {
-    // do something
-    this._unsubscribe = this.props.navigation.addListener('focus', () => {
-      // console.log(this.props.route.params);
-      if (this.props.route.params) {
-        // console.log(this.props.route.params.item, 'params');
-        let addedElement = this.props.route.params.item;
-        this.addItem(addedElement);
-        // console.log(this.props.route.params.item);
-        this.props.route.params = null;
-      }
+//==================================================================================================================================
+//Select Shoe Size Functions
+
+  selectItemReturn = () => {
+    let item = {...this.state.selectedElement};
+    let {selectedSize} = this.state;
+    item['selectedSize'] = selectedSize;
+    this.addItem(item);
+    console.log(item);
+    this.RBSheet.close()
+  };
+
+  setSize = (size) => {
+    this.setState({selectedSize: size}, () => {
+      console.log(this.state);
     });
+  };
 
-    // });
-  }
 
-  componentWillUnmount() {
-    if (this._unsubscribe) {
-      this._unsubscribe();
-    }
-  }
-
+  //=========================================================================================================================
+  // Main Render
   render() {
-    let {cartList, addedItem} = this.state;
+    let {cartList, addedItem, selectedSize, size} = this.state;
     let {navigation} = this.props;
-    // console.log(addedItem, '/////////');
     return (
       <View style={{flex: 1, backgroundColor: '#f0f4f7'}}>
         <View style={styles.navbarHolder}>
@@ -354,7 +384,88 @@ export default class Home extends Component {
           keyExtractor={(value, i) => String(i)}
           renderItem={this._renderItem}
         />
-        {/* </View> */}
+        <RBSheet
+          ref={(ref) => {
+            this.RBSheet = ref;
+          }}
+          height={200}
+          openDuration={250}
+          customStyles={{
+            container: {
+              justifyContent: 'center',
+            },
+          }}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: '#f0f4f7',
+              paddingHorizontal: 25,
+            }}>
+            <View
+              style={{
+                marginTop: 15,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={styles.sizeSelector}>Select Size</Text>
+              <Text
+                style={[styles.sizeSelector, {color: '#29b07d', fontSize: 18}]}>
+                Size chart
+              </Text>
+            </View>
+            <Text
+              style={{fontSize: 16, fontWeight: 'bold', marginVertical: 25}}>
+              {selectedSize}
+            </Text>
+
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              {size.map((value, key) => {
+                return (
+                  <View
+                    style={{
+                      width: 30,
+                      height: 30,
+                      backgroundColor: '#f0f4f7',
+                      marginRight: 15,
+                    }}
+                    key = {key}
+                    >
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.setSize(value);
+                      }}>
+                      <Text>{value}</Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </View>
+            {selectedSize ? (
+              <TouchableOpacity
+                style={styles.returnButton}
+                onPress={() => {
+                  this.selectItemReturn();
+                }}>
+                <Text style={styles.returnButtonText}>Add Item</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.returnButton, {backgroundColor: '#777'}]}
+                onPress={() => {
+                  this.selectItemReturn();
+                }}
+                onPress={() => this.RBSheet.open()}>
+                <Text
+                  style={[
+                    styles.returnButtonText,
+                    {textDecorationLine: 'line-through', color: '#111'},
+                  ]}>
+                  Add Item
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </RBSheet>
       </View>
     );
   }
@@ -380,11 +491,14 @@ const styles = StyleSheet.create({
     right: 28,
     alignItems: 'center',
   },
-  addedItemIndicatorText:{
-    color: '#f0f4f7', fontWeight: 'bold'
+  addedItemIndicatorText: {
+    color: '#f0f4f7',
+    fontWeight: 'bold',
   },
   hamburgerIcon: {
-    resizeMode: 'contain', height: 30, width: 30
+    resizeMode: 'contain',
+    height: 30,
+    width: 30,
   },
   navbarRightIcon: {
     resizeMode: 'contain',
@@ -393,7 +507,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     marginVertical: 0,
   },
-  navbarTextOne:{
+  navbarTextOne: {
     marginLeft: 15,
     fontWeight: 'bold',
     fontSize: 20,
@@ -405,7 +519,37 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 10,
   },
-  body:{
-    backgroundColor: 'white', paddingTop: 15
+  body: {
+    backgroundColor: 'white',
+    paddingVertical: 15,
+  },
+  returnButton: {
+    width: '50%',
+    marginLeft: '25%',
+    backgroundColor: 'black',
+    paddingVertical: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  returnButtonText: {
+    color: 'white',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  sizeSelector: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  addToCartButton: {
+    width: '30%',
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 14,
+    alignItems: 'center',
+    marginLeft: 37,
+    marginBottom: 15,
+    borderColor: 'black',
+    borderWidth: 1,
   }
 });

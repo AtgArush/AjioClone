@@ -39,6 +39,9 @@ export default class Account extends Component {
     };
   }
 
+  //==============================================================================================================================
+  //Photo Options
+
   alertPhotoFunc = () => {
     Alert.alert(
       'Alert Title',
@@ -56,14 +59,29 @@ export default class Account extends Component {
     );
   };
 
-  openCamera = () => {
+  //==============================================================================================================================
+  //Camera Options
+
+  openCamera = async () => {
     console.log(launchCamera);
+  //   let a;
+  //   asdf;
+  //   asdfa;
+
+  //  let res= await new Promise();
+  //  let res2= await new Promise();
+  //  let res3= await new Promise();
+    
+
+  //   asidjfojaj;
+  //   asjdf;
+  //   asdf;
+
     launchCamera(
       {
         mediaType: 'photo',
       },
       (response) => {
-        // console.log(response)
         console.log(response);
         this.setState({image: response.uri}, () => {
           console.log(response.uri, this.state);
@@ -72,6 +90,9 @@ export default class Account extends Component {
     );
   };
 
+  //==============================================================================================================================
+  //Gallery options
+  
   openGallery = () => {
     console.log(launchImageLibrary);
     launchImageLibrary(
@@ -94,7 +115,6 @@ export default class Account extends Component {
   render() {
     let {cumtomerOption, companySection, image} = this.state;
     let {navigation} = this.props;
-    // alert(image);
     return (
       <View style={styles.container}>
         <View style={{marginTop: 25}}>
@@ -104,20 +124,18 @@ export default class Account extends Component {
         <ScrollView>
           <View style={styles.accountDetailContainer}>
             <View style={{flex: 0.25, paddingTop: 20}}>
-              {/* <Text>{image}</Text> */}
-              <Image
+              {image ?               <Image
                 style={{
                   width: 100,
                   height: 100,
                   borderRadius: 50,
                   backgroundColor:"red",
-                  // alignSelf: 'center',
                 }}
-                source={{uri: this.state.image}}
-              />
-              {/* {
-              this.state.image ? <Image source = {{uri: this.state.image}} /> : <></>
-            } */}
+                source={{uri: image}}
+              />: 
+              <View style = {styles.accountDetailContainerLeftImage}>
+                <Text style = {styles.accountIconText}>AD</Text>
+                </View>}
             </View>
             <View style={styles.accountRight}>
               <Text style={styles.accountTextMain}>DummyNameA</Text>
@@ -193,7 +211,7 @@ const styles = StyleSheet.create({
     height: 90,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 25,
+    marginVertical: 0,
     width: 90,
   },
   accountIconText: {
